@@ -7,66 +7,51 @@ namespace flash {
 
     class Vector3D {
     public:
-        Vector3D(float x = 0, float y = 0, float z = 0, float w = 0);
+        Vector3D(float x = 0, float y = 0, float z = 0, float w = 0) noexcept;
 
-        static float distanceBetween(Vector3D const &vector1, Vector3D const &vector2);
+        static float distanceBetween(Vector3D const &vector1, Vector3D const &vector2) noexcept;
 
-        static float dotProduct(Vector3D const &vector1, Vector3D const &vector2);
+        static float dotProduct(Vector3D const &vector1, Vector3D const &vector2) noexcept;
 
-        static float angleBetween(Vector3D const &vector1, Vector3D const &vector2);
+        static float angleBetween(Vector3D const &vector1, Vector3D const &vector2) noexcept;
 
-        static Vector3D crossProduct(Vector3D const &vector1, Vector3D const &vector2);
+        static Vector3D crossProduct(Vector3D const &vector1, Vector3D const &vector2) noexcept;
 
-        float x() const { return _row[0]; }
-        void x(float value);
+        float length() const  noexcept;
+        void setLength(float value) noexcept;
 
-        float y() const { return _row[1]; }
-        void y(float value);
+        void multiplyByScalar(float scalar) noexcept;
 
-        float z() const { return _row[2]; }
-        void z(float value);
+        void normalize() noexcept;
 
-        float w() const { return _row[3]; }
-        void w(float value);
+        void add(Vector3D const &vector) noexcept;
 
-        float length() const;
-        void length(float value);
+        void subtract(Vector3D const &vector) noexcept;
 
-        void multiplyByScalar(float scalar);
+        bool isEqualTo(Vector3D const &vector) const noexcept;
 
-        void normalize();
-
-        void add(Vector3D const &vector);
-
-        void subtract(Vector3D const &vector);
-
-        bool isEqualTo(Vector3D const &vector) const;
-
-        void multiplyByMatrix(Matrix3D const &matrix);
+        void multiplyByMatrix(Matrix3D const &matrix) noexcept;
 
         Vector3D clone() const;
 
-        float operator*(Vector3D& v) const;
+        float operator*(Vector3D& v) const noexcept;
 
-        Vector3D operator+(Vector3D& v) const;
+        Vector3D operator+(Vector3D& v) const noexcept;
 
-        Vector3D operator-(Vector3D& v) const;
+        Vector3D operator-(Vector3D& v) const noexcept;
 
-        Vector3D operator/(Vector3D& v) const;
+        Vector3D operator/(Vector3D& v) const noexcept;
 
-        Vector3D operator*(float scalar) const;
+        Vector3D operator*(float scalar) const noexcept;
 
-        Vector3D operator*(Matrix3D& m) const;
+        Vector3D operator*(Matrix3D& m) const noexcept;
 
-         const float& operator[](int index) const;
-        float& operator[](int index);
+        bool operator==(Vector3D& v) const noexcept;
 
-        bool operator==(Vector3D& v) const;
+        float x, y, z, w;
 
     private:
-        static float _squareRootOfSquareSums(float a, float b, float c);
-
-        float _row[4];
+        static float _squareRootOfSquareSums(float a, float b, float c) noexcept;
     };
 
     }

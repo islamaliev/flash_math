@@ -3,36 +3,32 @@
 
 using namespace flash::math;
 
-Vector3D::Vector3D(float x, float y, float z, float w) {
-    _row[0] = x;
-    _row[1] = y;
-    _row[2] = z;
-    _row[3] = w;
+Vector3D::Vector3D(float x, float y, float z, float w): x(x), y(y), z(z), w(w) {
 };
 
-float Vector3D::distanceBetween(Vector3D const &vector1, Vector3D const &vector2) {
-    float x(vector2.x() - vector1.x());
-    float y(vector2.y() - vector1.y());
-    float z(vector2.z() - vector1.z());
+float Vector3D::distanceBetween(Vector3D const &vec1, Vector3D const &vec2) {
+    float x(vec2.x - vec1.x);
+    float y(vec2.y - vec1.y);
+    float z(vec2.z - vec1.z);
     return _squareRootOfSquareSums(x, y, z);
 }
 
-float Vector3D::dotProduct(Vector3D const &vector1, Vector3D const &vector2) {
-    return vector2.x() * vector1.x() + vector2.y() * vector1.y() + vector2.z() * vector1.z();
+float Vector3D::dotProduct(Vector3D const &vec1, Vector3D const &vec2) {
+    return vec2.x * vec1.x + vec2.y * vec1.y + vec2.z * vec1.z;
 }
 
-float Vector3D::angleBetween(Vector3D const &vector1, Vector3D const &vector2) {
-    float dotProd = dotProduct(vector1, vector2);
-    float val = dotProd / vector1.length() / vector2.length();
+float Vector3D::angleBetween(Vector3D const &vec1, Vector3D const &vec2) {
+    float dotProd = dotProduct(vec1, vec2);
+    float val = dotProd / vec1.length() / vec2.length();
     return (float) (acosf(val) * 180 / M_PI);
 }
 
-Vector3D Vector3D::crossProduct(Vector3D const &vector1, Vector3D const &vector2) {
-    Vector3D resultVector;
-    resultVector.x(vector1.y() * vector2.z() - vector1.z() * vector2.y());
-    resultVector.y(vector1.z() * vector2.x() - vector1.x() * vector2.z());
-    resultVector.z(vector1.x() * vector2.y() - vector1.y() * vector2.x());
-    return resultVector;
+Vector3D Vector3D::crossProduct(Vector3D const &vec1, Vector3D const &vec2) {
+    Vector3D resultVec;
+    resultVec.x = vec1.y * vec2.z - vec1.z * vec2.y;
+    resultVec.y = vec1.z * vec2.x - vec1.x * vec2.z;
+    resultVec.z = vec1.x * vec2.y - vec1.y * vec2.x;
+    return resultVec;
 }
 
 float Vector3D::_squareRootOfSquareSums(float a, float b, float c) {
@@ -40,40 +36,40 @@ float Vector3D::_squareRootOfSquareSums(float a, float b, float c) {
 }
 
 void Vector3D::x(float value) {
-    _row[0] = value;
+    x = value;
 }
 
 void Vector3D::y(float value) {
-    _row[1] = value;
+    y = value;
 }
 
 void Vector3D::z(float value) {
-    _row[2] = value;
+    z = value;
 }
 
 void Vector3D::w(float value) {
-    _row[3] = value;
+    w = value;
 }
 
 float Vector3D::length() const {
-    return _squareRootOfSquareSums(_row[0], _row[1], _row[2]);
+    return _squareRootOfSquareSums(x, y, z);
 }
 
-void Vector3D::length(float value) {
+void Vector3D::setLength(float value) {
     normalize();
     multiplyByScalar(value);
 }
 
-void Vector3D::add(Vector3D const &vector) {
-    _row[0] += vector[0];
-    _row[1] += vector[1];
-    _row[2] += vector[2];
+void Vector3D::add(Vector3D const &vec) {
+    x += vec.x;
+    y += vec.y;
+    z += vec.z;
 }
 
-void Vector3D::subtract(Vector3D const &vector) {
-    _row[0] -= vector[0];
-    _row[1] -= vector[1];
-    _row[2] -= vector[2];
+void Vector3D::subtract(Vector3D const &vec) {
+    x -= vec.x;
+    y -= vec.y;
+    z -= vec.z;
 }
 
 void Vector3D::multiplyByMatrix(Matrix3D const &matrix) {
@@ -81,17 +77,17 @@ void Vector3D::multiplyByMatrix(Matrix3D const &matrix) {
 }
 
 Vector3D Vector3D::clone() const {
-    return Vector3D(_row[0], _row[1], _row[2], _row[3]);
+    return Vector3D(x, y, z, w);
 }
 
-bool Vector3D::isEqualTo(Vector3D const &vector) const {
-    return vector.x() == _row[0] && vector.y() == _row[1] && vector.z() == _row[2] && vector.w() == _row[3];
+bool Vector3D::isEqualTo(Vector3D const &vec) const {
+    return vec.x == x && vec.y == y && vec.z == z && vec.w == w;
 }
 
 void Vector3D::multiplyByScalar(float scalar) {
-    _row[0] *= scalar;
-    _row[1] *= scalar;
-    _row[2] *= scalar;
+    x *= scalar;
+    y *= scalar;
+    z *= scalar;
 }
 
 void Vector3D::normalize() {
@@ -103,9 +99,9 @@ float Vector3D::operator*(Vector3D &v) const {
 }
 
 Vector3D Vector3D::operator+(Vector3D &v) const {
-    Vector3D resultVector = *this;
-    resultVector.add(v);
-    return resultVector;
+    Vector3D resultVec = *this;
+    resultVec.add(v);
+    return resultVec;
 }
 
 Vector3D Vector3D::operator/(Vector3D &v) const {
@@ -132,14 +128,4 @@ Vector3D Vector3D::operator*(Matrix3D &m) const {
     Vector3D resultVector = *this;
     resultVector.multiplyByMatrix(m);
     return resultVector;
-}
-
-const float& Vector3D::operator[](int index) const
-{
-    return _row[index];
-}
-
-float& Vector3D::operator[](int index)
-{
-    return _row[index];
 }
