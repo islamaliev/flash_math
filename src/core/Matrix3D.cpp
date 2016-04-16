@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include "Matrix3D.h"
 
+using namespace flash::math;
+
 static float ORTHOGONALIZE_FRACTION = 0.25;
 
 Vector3D _deriveBasisVector(Vector3D const &v1, Vector3D const &v2, Vector3D const &v3) ;

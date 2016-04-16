@@ -1,10 +1,7 @@
-//
-// Created by Islam Aliev on 27/12/14.
-// Copyright (c) 2014 me. All rights reserved.
-//
-
 #include <math.h>
 #include "Quaternion.h"
+
+using namespace flash::math;
 
 Quaternion::Quaternion(float theta, Vector3D const &v) {
 	float halfTheta = theta / 2;

@@ -1,10 +1,7 @@
-//
-// Created by Islam Aliev on 28/12/14.
-// Copyright (c) 2014 me. All rights reserved.
-//
-
 #include <math.h>
 #include "Orientation.h"
+
+using namespace flash::math;
 
 const static double pi = M_PI;
 const static double pi2 = 2 * M_PI;

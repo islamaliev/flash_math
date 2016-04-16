@@ -1,68 +1,70 @@
-#ifndef __Qauternion_H_
-#define __Qauternion_H_
+#pragma once
 
 
 #include "../core/Matrix3D.h"
 #include "EulerAngles.h"
 
-class EulerAngles;
+namespace flash {
+	namespace math {
 
-class Quaternion {
-public:
-	Quaternion static getDifference(const Quaternion& q1, const Quaternion& q2);
+	class EulerAngles;
 
-	Quaternion static fromMatrix(const Matrix3D& matrix);
+	class Quaternion {
+	public:
+		Quaternion static getDifference(const Quaternion& q1, const Quaternion& q2);
 
-	float static dotProduct(const Quaternion& q1, const Quaternion& q2);
+		Quaternion static fromMatrix(const Matrix3D& matrix);
 
-	Quaternion(float theta, Vector3D const &v = Vector3D(0,0,0));
+		float static dotProduct(const Quaternion& q1, const Quaternion& q2);
 
-	Quaternion(float w, float x, float y, float z);
+		Quaternion(float theta, Vector3D const &v = Vector3D(0,0,0));
 
-	Quaternion();
+		Quaternion(float w, float x, float y, float z);
 
-	float w() const {
-		return _w;
+		Quaternion();
+
+		float w() const {
+			return _w;
+		}
+		void w(float value);
+
+		float x() const {
+			return _x;
+		}
+		void x(float value);
+
+		float y() const {
+			return _y;
+		}
+		void y(float value);
+
+		float z() const {
+			return _z;
+		}
+		void z(float value);
+
+		void invert();
+
+		Quaternion operator*(const Quaternion& q) const;
+
+		Quaternion operator*(float scalar) const;
+
+		Quaternion exp(float exponent) const;
+
+		Quaternion slerp(const Quaternion&to, float fraction) const;
+
+		Matrix3D toMatrix() const;
+
+		EulerAngles uprightToEulerAngles() const;
+
+		EulerAngles objectToEulerAngles() const;
+
+	private:
+		float _w;
+		float _x;
+		float _y;
+		float _z;
+	};
+
 	}
-	void w(float value);
-
-	float x() const {
-		return _x;
-	}
-	void x(float value);
-
-	float y() const {
-		return _y;
-	}
-	void y(float value);
-
-	float z() const {
-		return _z;
-	}
-	void z(float value);
-
-	void invert();
-
-	Quaternion operator*(const Quaternion& q) const;
-
-	Quaternion operator*(float scalar) const;
-
-	Quaternion exp(float exponent) const;
-
-	Quaternion slerp(const Quaternion&to, float fraction) const;
-
-	Matrix3D toMatrix() const;
-
-	EulerAngles uprightToEulerAngles() const;
-
-	EulerAngles objectToEulerAngles() const;
-
-private:
-	float _w;
-	float _x;
-	float _y;
-	float _z;
-};
-
-
-#endif //__Qauternion_H_
+}

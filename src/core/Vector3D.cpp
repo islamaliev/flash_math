@@ -1,6 +1,8 @@
 #import <math.h>
 #include "Matrix3D.h"
 
+using namespace flash::math;
+
 Vector3D::Vector3D(float x, float y, float z, float w) {
     _row[0] = x;
     _row[1] = y;

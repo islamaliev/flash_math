@@ -1,6 +1,8 @@
 #include <math.h>
 #include "EulerAngles.h"
 
+using namespace flash::math;
+
 EulerAngles::EulerAngles(float heading, float pitch, float bank) : _heading(heading), _pitch(pitch), _bank(bank) {};
 
 void EulerAngles::heading(float value) {
