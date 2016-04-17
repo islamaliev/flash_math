@@ -15,7 +15,7 @@ namespace flash {
 				float y2 = 1, float z2 = 0, float x3 = 0, float y3 = 0,
 				float z3 = 1, float xt = 0, float yt = 0, float zt = 0);
 
-		Matrix3D();
+		Matrix3D() = default;
 
 		static void multiplyVectorByMatrix(Vector3D& vector, const Matrix3D& matrix);
 
@@ -23,53 +23,53 @@ namespace flash {
 
 		static Matrix3D orthographicProjection(float left, float right, float bottom, float top, float near, float far);
 
-		float x1() const { return _rows[0][0]; };
-		void x1(float value);
+		float x1() const { return v1.x; };
+		void x1(float value) { v1.x = value; }
 
-		float x2() const { return _rows[1][0]; }
-		void x2(float value);
+		float x2() const { return v2.x; }
+		void x2(float value) { v2.x = value; }
 
-		float x3() const { return _rows[2][0]; }
-		void x3(float value);
+		float x3() const { return v3.x; }
+		void x3(float value) { v3.x = value; }
 
-		float y1() const { return _rows[0][1]; }
-		void y1(float value);
+		float y1() const { return v1.y; }
+		void y1(float value) { v1.y = value; }
 
-		float y2() const { return _rows[1][1]; }
-		void y2(float value);
+		float y2() const { return v2.y; }
+		void y2(float value) { v2.y = value; }
 
-		float y3() const { return _rows[2][1]; }
-		void y3(float value);
+		float y3() const { return v3.y; }
+		void y3(float value) { v3.y = value; }
 
-		float z1() const { return _rows[0][2]; }
-		void z1(float value);
+		float z1() const { return v1.z; }
+		void z1(float value) { v1.z = value; }
 
-		float z2() const { return _rows[1][2]; }
-		void z2(float value);
+		float z2() const { return v2.z; }
+		void z2(float value) { v2.z = value; }
 
-		float z3() const { return _rows[2][2]; }
-		void z3(float value);
+		float z3() const { return v3.z; }
+		void z3(float value) { v3.z = value; }
 
-		float xt() const { return _rows[3][0]; }
-		void xt(float value);
+		float xt() const { return vt.x; }
+		void xt(float value) { vt.x = value; }
 
-		float yt() const { return _rows[3][1]; }
-		void yt(float value);
+		float yt() const { return vt.y; }
+		void yt(float value) { vt.y = value; }
 
-		float zt() const { return _rows[3][2]; }
-		void zt(float value);
+		float zt() const { return vt.z; }
+		void zt(float value) { vt.z = value; }
 
-		float w1() const { return _rows[0][3]; }
-		void w1(float value);
+		float w1() const { return v1.w; }
+		void w1(float value) { v1.w = value; }
 
-		float w2() const { return _rows[1][3]; }
-		void w2(float value);
+		float w2() const { return v2.w; }
+		void w2(float value) { v2.w = value; }
 
-		float w3() const { return _rows[2][3]; }
-		void w3(float value);
+		float w3() const { return v3.w; }
+		void w3(float value) { v3.w = value; }
 
-		float wt() const { return _rows[3][3]; }
-		void wt(float value);
+		float wt() const { return vt.w; }
+		void wt(float value) { vt.w = value; }
 
 		float determinant() const;
 
@@ -110,20 +110,23 @@ namespace flash {
 
 		void transform(Vector3D& vector) const;
 
-		Vector3D& operator[](int index);
-		const Vector3D& operator[](int index) const;
+		inline operator float*() { return &v1.x; }
+		inline operator const float*() const { return &v1.x; }
 
-		inline operator float*() { return &_rows[0][0]; }
-		inline operator const float*() const { return &_rows[0][0]; }
+		Vector3D v1 {1, 0, 0, 0};
+		Vector3D v2 {0, 1, 0, 0};
+		Vector3D v3 {0, 0, 1, 0};
+		Vector3D vt {0, 0, 0, 1};
 
 	private:
+		Vector3D& operator[](int index) { return *(&v1 + index); }
+		const Vector3D& operator[](int index) const { return *(&v1 + index); }
+
 		bool _areClose(float value1, float value2, int factor) const;
 
 		void _performGrandSchmidtOrthogonalizingAlgorithm();
 
 		void _performOrthogonalizingAlgorithm();
-
-		Vector3D _rows[4] = {};
 	};
 
 	}

@@ -48,6 +48,9 @@ namespace flash {
 
         bool operator==(Vector3D& v) const noexcept;
 
+        float& operator[](int index) { return *(&x + index); }
+        const float& operator[](int index) const { return *(&x + index);  }
+
         float x, y, z, w;
 
     private:

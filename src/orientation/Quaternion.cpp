@@ -7,9 +7,9 @@ Quaternion::Quaternion(float theta, Vector3D const &v) {
 	float halfTheta = theta / 2;
 	_w = cosf(halfTheta);
 	float sinTheta = sinf(halfTheta);
-	_x = sinTheta * v.x();
-	_y = sinTheta * v.y();
-	_z = sinTheta * v.z();
+	_x = sinTheta * v.x;
+	_y = sinTheta * v.y;
+	_z = sinTheta * v.z;
 }
 
 Quaternion::Quaternion(float w, float x, float y, float z): _w(w), _x(x), _y(y), _z(z) {}

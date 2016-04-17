@@ -35,22 +35,6 @@ float Vector3D::_squareRootOfSquareSums(float a, float b, float c) {
     return sqrtf(a * a + b * b + c * c);
 }
 
-void Vector3D::x(float value) {
-    x = value;
-}
-
-void Vector3D::y(float value) {
-    y = value;
-}
-
-void Vector3D::z(float value) {
-    z = value;
-}
-
-void Vector3D::w(float value) {
-    w = value;
-}
-
 float Vector3D::length() const {
     return _squareRootOfSquareSums(x, y, z);
 }
