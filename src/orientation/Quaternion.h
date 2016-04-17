@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../core/Matrix3D.h"
+#include "../core/Mat4.h"
 #include "EulerAngles.h"
 
 namespace flash {
@@ -13,7 +13,7 @@ namespace flash {
 	public:
 		Quaternion static getDifference(const Quaternion& q1, const Quaternion& q2);
 
-		Quaternion static fromMatrix(const Matrix3D& matrix);
+		Quaternion static fromMatrix(const Mat4& matrix);
 
 		float static dotProduct(const Quaternion& q1, const Quaternion& q2);
 
@@ -53,7 +53,7 @@ namespace flash {
 
 		Quaternion slerp(const Quaternion&to, float fraction) const;
 
-		Matrix3D toMatrix() const;
+		Mat4 toMatrix() const;
 
 		EulerAngles uprightToEulerAngles() const;
 

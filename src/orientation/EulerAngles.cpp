@@ -82,7 +82,7 @@ float EulerAngles::_wrap180(float theta) {
 	return theta;
 }
 
-Matrix3D EulerAngles::toUprightMatrix() const {
+Mat4 EulerAngles::toUprightMatrix() const {
 	float h = (float) (_heading * M_PI / 180);
 	float p = (float) (_pitch * M_PI / 180);
 	float b = (float) (_bank * M_PI / 180);
@@ -104,10 +104,10 @@ Matrix3D EulerAngles::toUprightMatrix() const {
 	float y3 = -sp;
 	float z3 = ch * cp;
 
-	return Matrix3D(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+	return Mat4(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 }
 
-Matrix3D EulerAngles::toObjectMatrix() const {
+Mat4 EulerAngles::toObjectMatrix() const {
 	float h = (float) (_heading * M_PI / 180);
 	float p = (float) (_pitch * M_PI / 180);
 	float b = (float) (_bank * M_PI / 180);
@@ -129,10 +129,10 @@ Matrix3D EulerAngles::toObjectMatrix() const {
 	float y3 = sb * sh + ch * sp * cb;
 	float z3 = ch * cp;
 
-	return Matrix3D(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+	return Mat4(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 }
 
-EulerAngles EulerAngles::fromUprightMatrix(const Matrix3D &matrix) {
+EulerAngles EulerAngles::fromUprightMatrix(const Mat4 &matrix) {
 	// We will compute the Euler angle values in radians and store them here:
 	float h, p, b;
 
@@ -164,10 +164,10 @@ EulerAngles EulerAngles::fromUprightMatrix(const Matrix3D &matrix) {
 	return EulerAngles(h * toGradMult, p * toGradMult, b * toGradMult);
 }
 
-EulerAngles EulerAngles::fromObjectMatrix(const Matrix3D &matrix) {
+EulerAngles EulerAngles::fromObjectMatrix(const Mat4 &matrix) {
 	// We will compute the Euler angle values in radians and store them here:
 	float h, p, b;
-    Matrix3D m(matrix);
+    Mat4 m(matrix);
     m.transpose();
 
 	// Extract pitch from y3, being careful for domain errors with asin().

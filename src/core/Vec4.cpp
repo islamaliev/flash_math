@@ -1,5 +1,5 @@
 #import <math.h>
-#include "Matrix3D.h"
+#include "Mat4.h"
 
 using namespace flash::math;
 
@@ -56,8 +56,8 @@ void Vec4::subtract(Vec4 const &vec) {
     z -= vec.z;
 }
 
-void Vec4::multiplyByMatrix(Matrix3D const &matrix) {
-	Matrix3D::multiplyVectorByMatrix(*this, matrix);
+void Vec4::multiplyByMatrix(Mat4 const &matrix) {
+	Mat4::multiplyVectorByMatrix(*this, matrix);
 }
 
 Vec4 Vec4::clone() const {
@@ -108,7 +108,7 @@ bool Vec4::operator==(Vec4 &v) const {
     return isEqualTo(v);
 }
 
-Vec4 Vec4::operator*(Matrix3D &m) const {
+Vec4 Vec4::operator*(Mat4 &m) const {
     Vec4 resultVector = *this;
     resultVector.multiplyByMatrix(m);
     return resultVector;

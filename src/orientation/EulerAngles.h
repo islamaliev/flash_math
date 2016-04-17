@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../core/Matrix3D.h"
+#include "../core/Mat4.h"
 #include "Quaternion.h"
 
 namespace flash {
@@ -13,9 +13,9 @@ namespace flash {
 	class EulerAngles
 	{
 	public:
-		static EulerAngles fromUprightMatrix(const Matrix3D& matrix);
+		static EulerAngles fromUprightMatrix(const Mat4& matrix);
 
-		static EulerAngles fromObjectMatrix(const Matrix3D& matrix);
+		static EulerAngles fromObjectMatrix(const Mat4& matrix);
 
 		EulerAngles(float heading = 0, float pitch = 0, float bank = 0);
 
@@ -44,9 +44,9 @@ namespace flash {
 
 		void canonize();
 
-		Matrix3D toUprightMatrix() const;
+		Mat4 toUprightMatrix() const;
 
-		Matrix3D toObjectMatrix() const;
+		Mat4 toObjectMatrix() const;
 
 		Quaternion toUprightQuaternion() const;
 

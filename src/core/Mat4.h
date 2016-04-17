@@ -8,20 +8,20 @@ namespace flash {
 
 	class Vec4;
 
-	class Matrix3D {
+	class Mat4 {
 
 	public:
-		explicit Matrix3D(float x1, float y1 = 0, float z1 = 0, float x2 = 0,
+		explicit Mat4(float x1, float y1 = 0, float z1 = 0, float x2 = 0,
 				float y2 = 1, float z2 = 0, float x3 = 0, float y3 = 0,
 				float z3 = 1, float xt = 0, float yt = 0, float zt = 0);
 
-		Matrix3D() = default;
+		Mat4() = default;
 
-		static void multiplyVectorByMatrix(Vec4& vector, const Matrix3D& matrix);
+		static void multiplyVectorByMatrix(Vec4& vector, const Mat4& matrix);
 
-		static Matrix3D perspectiveProjection(float fovy, float aspectRatio, float near, float far);
+		static Mat4 perspectiveProjection(float fovy, float aspectRatio, float near, float far);
 
-		static Matrix3D orthographicProjection(float left, float right, float bottom, float top, float near, float far);
+		static Mat4 orthographicProjection(float left, float right, float bottom, float top, float near, float far);
 
 		float x1() const { return v1.x; };
 		void x1(float value) { v1.x = value; }
@@ -79,7 +79,7 @@ namespace flash {
 
 		void multiplyByScalar(float scalar);
 
-		void multiplyByMatrix(const Matrix3D& m);
+		void multiplyByMatrix(const Mat4& m);
 
 		void rotateAboutX(float degrees);
 
@@ -96,11 +96,11 @@ namespace flash {
 
 		void inverse();
 
-		Matrix3D clone() const;
+		Mat4 clone() const;
 
-		bool isClose(const Matrix3D& matrix, unsigned precision) const;
+		bool isClose(const Mat4& matrix, unsigned precision) const;
 
-		bool isEqual(const Matrix3D& matrix) const;
+		bool isEqual(const Mat4& matrix) const;
 
 		bool isOrthogonal() const;
 

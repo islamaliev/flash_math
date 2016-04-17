@@ -3,7 +3,7 @@
 namespace flash {
     namespace math {
 
-    class Matrix3D;
+    class Mat4;
 
     class Vec4 {
     public:
@@ -30,7 +30,7 @@ namespace flash {
 
         bool isEqualTo(Vec4 const &vector) const noexcept;
 
-        void multiplyByMatrix(Matrix3D const &matrix) noexcept;
+        void multiplyByMatrix(Mat4 const &matrix) noexcept;
 
         Vec4 clone() const;
 
@@ -44,7 +44,7 @@ namespace flash {
 
         Vec4 operator*(float scalar) const noexcept;
 
-        Vec4 operator*(Matrix3D& m) const noexcept;
+        Vec4 operator*(Mat4& m) const noexcept;
 
         bool operator==(Vec4& v) const noexcept;
 

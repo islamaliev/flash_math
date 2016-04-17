@@ -123,7 +123,7 @@ Quaternion Quaternion::slerp(const Quaternion &to, float fraction) const {
 	return Quaternion (w, x, y, z);
 }
 
-Matrix3D Quaternion::toMatrix() const {
+Mat4 Quaternion::toMatrix() const {
 	float qx2 = _x * _x;
 	float qy2 = _y * _y;
 	float qz2 = _z * _z;
@@ -136,10 +136,10 @@ Matrix3D Quaternion::toMatrix() const {
 	float x3 = 2 * _x * _z + 2 * _w * _y;
 	float y3 = 2 * _y * _z - 2 * _w * _x;
 	float z3 = 1 - 2 * qx2 - 2 * qy2;
-	return Matrix3D(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+	return Mat4(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 }
 
-Quaternion Quaternion::fromMatrix(const Matrix3D &matrix) {
+Quaternion Quaternion::fromMatrix(const Mat4 &matrix) {
 	float x1 = matrix.x1();
 	float y1 = matrix.y1();
 	float z1 = matrix.z1();

@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdexcept>
-#include "Matrix3D.h"
+#include "Mat4.h"
 
 using namespace flash::math;
 
@@ -8,7 +8,7 @@ static float ORTHOGONALIZE_FRACTION = 0.25;
 
 Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) ;
 
-Matrix3D::Matrix3D(float x1, float y1, float z1, float x2, float y2,
+Mat4::Mat4(float x1, float y1, float z1, float x2, float y2,
 		float z2, float x3, float y3, float z3, float xt, float yt,
 		float zt)
     : v1(x1, y1, z1, 0)
@@ -17,8 +17,8 @@ Matrix3D::Matrix3D(float x1, float y1, float z1, float x2, float y2,
     , vt(xt, yt, zt, 1)
 {}
 
-Matrix3D Matrix3D::perspectiveProjection(float fovy, float aspectRatio, float near, float far) {
-	Matrix3D matrix;
+Mat4 Mat4::perspectiveProjection(float fovy, float aspectRatio, float near, float far) {
+	Mat4 matrix;
 	float zoomY = 1 / tanf(fovy * (float) M_PI / 360);
 	float zoomX = zoomY / aspectRatio;
 	float z = (near + far) / (near - far);
@@ -32,8 +32,8 @@ Matrix3D Matrix3D::perspectiveProjection(float fovy, float aspectRatio, float ne
 	return matrix;
 }
 
-Matrix3D Matrix3D::orthographicProjection(float left, float right, float bottom, float top, float near, float far) {
-	Matrix3D matrix;
+Mat4 Mat4::orthographicProjection(float left, float right, float bottom, float top, float near, float far) {
+	Mat4 matrix;
     matrix.x1(2.0f / (right - left));
     matrix.y2(2.0f / (top - bottom));
     matrix.z3(2.0f / (near - far));
@@ -44,12 +44,12 @@ Matrix3D Matrix3D::orthographicProjection(float left, float right, float bottom,
 	return matrix;
 }
 
-float Matrix3D::determinant() const {
+float Mat4::determinant() const {
     return v1.x * v2.y * v3.z + v1.y * v2.z * v3.x + v1.z * v2.x * v3.y -
             v1.x * v2.z * v3.y - v1.y * v2.x * v3.z - v1.z * v2.y * v3.x;
 }
 
-void Matrix3D::transpose() {
+void Mat4::transpose() {
     float temp = v2.x;
     v2.x = v1.y;
     v1.y = temp;
@@ -61,7 +61,7 @@ void Matrix3D::transpose() {
     v3.y = temp;
 }
 
-void Matrix3D::identity() {
+void Mat4::identity() {
     v1.x = 1;
     v1.y = 0;
     v1.z = 0;
@@ -73,7 +73,7 @@ void Matrix3D::identity() {
     v3.z = 1;
 }
 
-void Matrix3D::multiplyByScalar(float scalar) {
+void Mat4::multiplyByScalar(float scalar) {
     v1.x *= scalar;
     v1.y *= scalar;
     v1.z *= scalar;
@@ -85,8 +85,8 @@ void Matrix3D::multiplyByScalar(float scalar) {
     v3.z *= scalar;
 }
 
-void Matrix3D::multiplyByMatrix(Matrix3D const & m) {
-    Matrix3D result;
+void Mat4::multiplyByMatrix(Mat4 const & m) {
+    Mat4 result;
     for (int j = 0; j < 4; j++)
     {
         for (int i = 0; i < 4; i++)
@@ -120,7 +120,7 @@ void Matrix3D::multiplyByMatrix(Matrix3D const & m) {
     vt.w = result[3][3];
 }
 
-void Matrix3D::rotateAboutX(float degrees) {
+void Mat4::rotateAboutX(float degrees) {
     float radians = (float) (degrees * M_PI / 180);
     float cosVal = cosf(radians);
     float sinVal = sinf(radians);
@@ -130,7 +130,7 @@ void Matrix3D::rotateAboutX(float degrees) {
     v3.z = cosVal;
 }
 
-void Matrix3D::rotateAboutY(float degrees) {
+void Mat4::rotateAboutY(float degrees) {
     float radians = (float) (degrees * M_PI / 180);
     float cosVal = cosf(radians);
     float sinVal = sinf(radians);
@@ -140,7 +140,7 @@ void Matrix3D::rotateAboutY(float degrees) {
     v3.z = cosVal;
 }
 
-void Matrix3D::rotateAboutZ(float degrees) {
+void Mat4::rotateAboutZ(float degrees) {
     float radians = (float) (degrees * M_PI / 180);
     float cosVal = cosf(radians);
     float sinVal = sinf(radians);
@@ -150,7 +150,7 @@ void Matrix3D::rotateAboutZ(float degrees) {
     v2.y = cosVal;
 }
 
-void Matrix3D::rotateAbout(Vec4 const &vector, float degrees) {
+void Mat4::rotateAbout(Vec4 const &vector, float degrees) {
     float radians = (float) (degrees * M_PI / 180);
     float  vx = vector.x;
     float  vy = vector.y;
@@ -172,11 +172,11 @@ void Matrix3D::rotateAbout(Vec4 const &vector, float degrees) {
     v3.z = vz * vz * cosOp + cosVal;
 }
 
-void Matrix3D::scaleAlong(Vec4 const &vector, float factor) {
+void Mat4::scaleAlong(Vec4 const &vector, float factor) {
 	scaleAlong(vector.x, vector.y, vector.z, factor);
 }
 
-void Matrix3D::scaleAlong(float x, float y, float z, float factor) {
+void Mat4::scaleAlong(float x, float y, float z, float factor) {
 	float facOp = factor - 1;
 	float y1x2 = facOp * x * y;
 	float z1x3 = facOp * x * z;
@@ -192,7 +192,7 @@ void Matrix3D::scaleAlong(float x, float y, float z, float factor) {
 	v3.z *= 1 + facOp * z * z;
 }
 
-void Matrix3D::scale(float scaleX, float scaleY, float scaleZ) {
+void Mat4::scale(float scaleX, float scaleY, float scaleZ) {
 	v1.x *= scaleX;
 	v1.y *= scaleX;
 	v1.z *= scaleX;
@@ -204,7 +204,7 @@ void Matrix3D::scale(float scaleX, float scaleY, float scaleZ) {
 	v3.z *= scaleZ;
 }
 
-void Matrix3D::inverse() {
+void Mat4::inverse() {
     float det = determinant();
     float newX1 = v2.y * v3.z - v2.z * v3.y; // cofactor 0, 0 +
     float newY1 = v2.z * v3.x - v2.x * v3.z; // cofactor 0, 1 -
@@ -228,13 +228,13 @@ void Matrix3D::inverse() {
     multiplyByScalar(1 / det);
 }
 
-bool Matrix3D::isEqual(Matrix3D const &matrix) const {
+bool Mat4::isEqual(Mat4 const &matrix) const {
     return matrix.x1() == v1.x && matrix.x2() == v2.x && matrix.x3() == v3.x && matrix.y1() == v1.y &&
             matrix.y2() == v2.y && matrix.y3() == v3.y && matrix.z1() == v1.z && matrix.z2() == v2.z &&
             matrix.z3() == v3.z;
 }
 
-bool Matrix3D::isClose(Matrix3D const &matrix, unsigned int precision) const {
+bool Mat4::isClose(Mat4 const &matrix, unsigned int precision) const {
     int factor = (int) powf(10, precision);
     return _areClose(matrix.x1(), v1.x, factor) && _areClose(matrix.y1(), v1.y, factor) && _areClose(matrix.z1(), v1.z,
     factor) && _areClose(matrix.x2(), v2.x, factor) && _areClose(matrix.y2(), v2.y,
@@ -242,18 +242,18 @@ bool Matrix3D::isClose(Matrix3D const &matrix, unsigned int precision) const {
     factor) && _areClose(matrix.y3(), v3.y, factor) && _areClose(matrix.z3(), v3.z, factor);
 }
 
-void Matrix3D::translate(float xt, float yt, float zt) {
+void Mat4::translate(float xt, float yt, float zt) {
 	vt.x = xt;
 	vt.y = yt;
 	vt.z = zt;
 }
 
-void Matrix3D::transform(Vec4 &vector) const {
+void Mat4::transform(Vec4 &vector) const {
 	multiplyVectorByMatrix(vector, *this);
 }
 
-Matrix3D Matrix3D::clone() const {
-    Matrix3D matrix = Matrix3D(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z,
+Mat4 Mat4::clone() const {
+    Mat4 matrix = Mat4(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z,
             v3.x, v3.y, v3.z, vt.x, vt.y, vt.z);
     matrix.w1(v1.w);
     matrix.w2(v2.w);
@@ -262,14 +262,14 @@ Matrix3D Matrix3D::clone() const {
     return matrix;
 }
 
-bool Matrix3D::isOrthogonal() const {
-	Matrix3D transposedMatrix = clone();
+bool Mat4::isOrthogonal() const {
+	Mat4 transposedMatrix = clone();
 	transposedMatrix.transpose();
 	transposedMatrix.multiplyByMatrix(*this);
-	return transposedMatrix.isClose(Matrix3D(), 5);
+	return transposedMatrix.isClose(Mat4(), 5);
 }
 
-void Matrix3D::orthogonalize() {
+void Mat4::orthogonalize() {
 	Vec4 basis = Vec4(v1.x, v1.y, v1.z);
 	basis.normalize();
 	v1.x = basis.x;
@@ -291,7 +291,7 @@ void Matrix3D::orthogonalize() {
 	_performGrandSchmidtOrthogonalizingAlgorithm();
 }
 
-void Matrix3D::_performGrandSchmidtOrthogonalizingAlgorithm() {
+void Mat4::_performGrandSchmidtOrthogonalizingAlgorithm() {
 	Vec4 tempV1 = Vec4(v1.x, v1.y, v1.z);
 	Vec4 tempV2 = Vec4(v2.x, v2.y, v2.z);
 	tempV1.normalize();
@@ -314,7 +314,7 @@ void Matrix3D::_performGrandSchmidtOrthogonalizingAlgorithm() {
 	v3.z = tempV3.z;
 }
 
-void Matrix3D::_performOrthogonalizingAlgorithm() {
+void Mat4::_performOrthogonalizingAlgorithm() {
 	Vec4 tempV1 = Vec4(v1.x, v1.y, v1.z);
 	Vec4 tempV2 = Vec4(v2.x, v2.y, v2.z);
 	Vec4 tempV3 = Vec4(v3.x, v3.y, v3.z);
@@ -347,13 +347,13 @@ Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) {
 	return basis;
 }
 
-bool Matrix3D::_areClose(float value1, float value2, int factor) const {
+bool Mat4::_areClose(float value1, float value2, int factor) const {
     const float d1 = roundf(value1 * factor);
     const float d2 = roundf(value2 * factor);
     return d1 == d2;
 }
 
-void Matrix3D::multiplyVectorByMatrix(Vec4 &vector, const Matrix3D &matrix) {
+void Mat4::multiplyVectorByMatrix(Vec4 &vector, const Mat4 &matrix) {
 	float x = vector.x;
 	float y = vector.y;
 	float z = vector.z;
