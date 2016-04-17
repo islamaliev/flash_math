@@ -1,12 +1,12 @@
 #pragma once
 
 
-#include "Vector3D.h"
+#include "Vec4.h"
 
 namespace flash {
 	namespace math {
 
-	class Vector3D;
+	class Vec4;
 
 	class Matrix3D {
 
@@ -17,7 +17,7 @@ namespace flash {
 
 		Matrix3D() = default;
 
-		static void multiplyVectorByMatrix(Vector3D& vector, const Matrix3D& matrix);
+		static void multiplyVectorByMatrix(Vec4& vector, const Matrix3D& matrix);
 
 		static Matrix3D perspectiveProjection(float fovy, float aspectRatio, float near, float far);
 
@@ -87,9 +87,9 @@ namespace flash {
 
 		void rotateAboutZ(float degrees);
 
-		void rotateAbout(const Vector3D& vector, float degrees);
+		void rotateAbout(const Vec4& vector, float degrees);
 
-		void scaleAlong(const Vector3D& vector, float factor);
+		void scaleAlong(const Vec4& vector, float factor);
 		void scaleAlong(float x, float y, float z, float factor);
 
 		void scale(float scaleX, float scaleY, float scaleZ);
@@ -108,19 +108,19 @@ namespace flash {
 
 		void translate(float xt, float yt, float zt);
 
-		void transform(Vector3D& vector) const;
+		void transform(Vec4& vector) const;
 
 		inline operator float*() { return &v1.x; }
 		inline operator const float*() const { return &v1.x; }
 
-		Vector3D v1 {1, 0, 0, 0};
-		Vector3D v2 {0, 1, 0, 0};
-		Vector3D v3 {0, 0, 1, 0};
-		Vector3D vt {0, 0, 0, 1};
+		Vec4 v1 {1, 0, 0, 0};
+		Vec4 v2 {0, 1, 0, 0};
+		Vec4 v3 {0, 0, 1, 0};
+		Vec4 vt {0, 0, 0, 1};
 
 	private:
-		Vector3D& operator[](int index) { return *(&v1 + index); }
-		const Vector3D& operator[](int index) const { return *(&v1 + index); }
+		Vec4& operator[](int index) { return *(&v1 + index); }
+		const Vec4& operator[](int index) const { return *(&v1 + index); }
 
 		bool _areClose(float value1, float value2, int factor) const;
 

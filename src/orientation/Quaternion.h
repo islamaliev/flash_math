@@ -17,7 +17,7 @@ namespace flash {
 
 		float static dotProduct(const Quaternion& q1, const Quaternion& q2);
 
-		Quaternion(float theta, Vector3D const &v = Vector3D(0,0,0));
+		Quaternion(float theta, Vec4 const &v = Vec4(0,0,0));
 
 		Quaternion(float w, float x, float y, float z);
 

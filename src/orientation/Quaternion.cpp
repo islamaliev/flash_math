@@ -3,7 +3,7 @@
 
 using namespace flash::math;
 
-Quaternion::Quaternion(float theta, Vector3D const &v) {
+Quaternion::Quaternion(float theta, Vec4 const &v) {
 	float halfTheta = theta / 2;
 	_w = cosf(halfTheta);
 	float sinTheta = sinf(halfTheta);

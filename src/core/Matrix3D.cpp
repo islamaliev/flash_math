@@ -6,7 +6,7 @@ using namespace flash::math;
 
 static float ORTHOGONALIZE_FRACTION = 0.25;
 
-Vector3D _deriveBasisVector(Vector3D const &vi, Vector3D const &vj, Vector3D const &vk) ;
+Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) ;
 
 Matrix3D::Matrix3D(float x1, float y1, float z1, float x2, float y2,
 		float z2, float x3, float y3, float z3, float xt, float yt,
@@ -150,7 +150,7 @@ void Matrix3D::rotateAboutZ(float degrees) {
     v2.y = cosVal;
 }
 
-void Matrix3D::rotateAbout(Vector3D const &vector, float degrees) {
+void Matrix3D::rotateAbout(Vec4 const &vector, float degrees) {
     float radians = (float) (degrees * M_PI / 180);
     float  vx = vector.x;
     float  vy = vector.y;
@@ -172,7 +172,7 @@ void Matrix3D::rotateAbout(Vector3D const &vector, float degrees) {
     v3.z = vz * vz * cosOp + cosVal;
 }
 
-void Matrix3D::scaleAlong(Vector3D const &vector, float factor) {
+void Matrix3D::scaleAlong(Vec4 const &vector, float factor) {
 	scaleAlong(vector.x, vector.y, vector.z, factor);
 }
 
@@ -248,7 +248,7 @@ void Matrix3D::translate(float xt, float yt, float zt) {
 	vt.z = zt;
 }
 
-void Matrix3D::transform(Vector3D &vector) const {
+void Matrix3D::transform(Vec4 &vector) const {
 	multiplyVectorByMatrix(vector, *this);
 }
 
@@ -270,17 +270,17 @@ bool Matrix3D::isOrthogonal() const {
 }
 
 void Matrix3D::orthogonalize() {
-	Vector3D basis = Vector3D(v1.x, v1.y, v1.z);
+	Vec4 basis = Vec4(v1.x, v1.y, v1.z);
 	basis.normalize();
 	v1.x = basis.x;
 	v1.y = basis.y;
 	v1.z = basis.z;
-	basis = Vector3D(v2.x, v2.y, v2.z);
+	basis = Vec4(v2.x, v2.y, v2.z);
 	basis.normalize();
 	v2.x = basis.x;
 	v2.y = basis.y;
 	v2.z = basis.z;
-	basis = Vector3D(v3.x, v3.y, v3.z);
+	basis = Vec4(v3.x, v3.y, v3.z);
 	basis.normalize();
 	v3.x = basis.x;
 	v3.y = basis.y;
@@ -292,35 +292,35 @@ void Matrix3D::orthogonalize() {
 }
 
 void Matrix3D::_performGrandSchmidtOrthogonalizingAlgorithm() {
-	Vector3D tempV1 = Vector3D(v1.x, v1.y, v1.z);
-	Vector3D tempV2 = Vector3D(v2.x, v2.y, v2.z);
+	Vec4 tempV1 = Vec4(v1.x, v1.y, v1.z);
+	Vec4 tempV2 = Vec4(v2.x, v2.y, v2.z);
 	tempV1.normalize();
 	tempV2.normalize();
 	v1.x = tempV1.x;
 	v1.y = tempV1.y;
 	v1.z = tempV1.z;
 
-	float dp = Vector3D::dotProduct(tempV2, tempV1);
-	Vector3D auxVec = tempV2.clone();
+	float dp = Vec4::dotProduct(tempV2, tempV1);
+	Vec4 auxVec = tempV2.clone();
 	auxVec.multiplyByScalar(dp);
 	tempV2.subtract(auxVec);
 	v2.x = tempV2.x;
 	v2.y = tempV2.y;
 	v2.z = tempV2.z;
 
-	Vector3D tempV3 = Vector3D::crossProduct(tempV1, tempV2);
+	Vec4 tempV3 = Vec4::crossProduct(tempV1, tempV2);
 	v3.x = tempV3.x;
 	v3.y = tempV3.y;
 	v3.z = tempV3.z;
 }
 
 void Matrix3D::_performOrthogonalizingAlgorithm() {
-	Vector3D tempV1 = Vector3D(v1.x, v1.y, v1.z);
-	Vector3D tempV2 = Vector3D(v2.x, v2.y, v2.z);
-	Vector3D tempV3 = Vector3D(v3.x, v3.y, v3.z);
-	Vector3D basis1 = _deriveBasisVector(tempV1, tempV2, tempV3);
-	Vector3D basis2 = _deriveBasisVector(tempV2, tempV1, tempV3);
-	Vector3D basis3 = _deriveBasisVector(tempV3, tempV1, tempV2);
+	Vec4 tempV1 = Vec4(v1.x, v1.y, v1.z);
+	Vec4 tempV2 = Vec4(v2.x, v2.y, v2.z);
+	Vec4 tempV3 = Vec4(v3.x, v3.y, v3.z);
+	Vec4 basis1 = _deriveBasisVector(tempV1, tempV2, tempV3);
+	Vec4 basis2 = _deriveBasisVector(tempV2, tempV1, tempV3);
+	Vec4 basis3 = _deriveBasisVector(tempV3, tempV1, tempV2);
 	v1.x = basis1.x;
 	v1.y = basis1.y;
 	v1.z = basis1.z;
@@ -332,14 +332,14 @@ void Matrix3D::_performOrthogonalizingAlgorithm() {
 	v3.z = basis3.z;
 }
 
-Vector3D _deriveBasisVector(Vector3D const &vi, Vector3D const &vj, Vector3D const &vk) {
-	float dp12 = Vector3D::dotProduct(vi, vj);
-	float dp22 = Vector3D::dotProduct(vj, vj);
-	float dp13 = Vector3D::dotProduct(vi, vk);
-	float dp33 = Vector3D::dotProduct(vk, vk);
-	Vector3D basis = vi.clone();
-	Vector3D v2Clone = vj.clone();
-	Vector3D v3Clone = vk.clone();
+Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) {
+	float dp12 = Vec4::dotProduct(vi, vj);
+	float dp22 = Vec4::dotProduct(vj, vj);
+	float dp13 = Vec4::dotProduct(vi, vk);
+	float dp33 = Vec4::dotProduct(vk, vk);
+	Vec4 basis = vi.clone();
+	Vec4 v2Clone = vj.clone();
+	Vec4 v3Clone = vk.clone();
 	v2Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp12 / dp22);
 	v3Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp13 / dp33);
 	basis.subtract(v2Clone);
@@ -353,7 +353,7 @@ bool Matrix3D::_areClose(float value1, float value2, int factor) const {
     return d1 == d2;
 }
 
-void Matrix3D::multiplyVectorByMatrix(Vector3D &vector, const Matrix3D &matrix) {
+void Matrix3D::multiplyVectorByMatrix(Vec4 &vector, const Matrix3D &matrix) {
 	float x = vector.x;
 	float y = vector.y;
 	float z = vector.z;
