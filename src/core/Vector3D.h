@@ -5,17 +5,17 @@ namespace flash {
 
     class Matrix3D;
 
-    class Vector3D {
+    class Vec4 {
     public:
-        Vector3D(float x = 0, float y = 0, float z = 0, float w = 0) noexcept;
+        Vec4(float x = 0, float y = 0, float z = 0, float w = 0) noexcept;
 
-        static float distanceBetween(Vector3D const &vector1, Vector3D const &vector2) noexcept;
+        static float distanceBetween(Vec4 const &vector1, Vec4 const &vector2) noexcept;
 
-        static float dotProduct(Vector3D const &vector1, Vector3D const &vector2) noexcept;
+        static float dotProduct(Vec4 const &vector1, Vec4 const &vector2) noexcept;
 
-        static float angleBetween(Vector3D const &vector1, Vector3D const &vector2) noexcept;
+        static float angleBetween(Vec4 const &vector1, Vec4 const &vector2) noexcept;
 
-        static Vector3D crossProduct(Vector3D const &vector1, Vector3D const &vector2) noexcept;
+        static Vec4 crossProduct(Vec4 const &vector1, Vec4 const &vector2) noexcept;
 
         float length() const  noexcept;
         void setLength(float value) noexcept;
@@ -24,29 +24,29 @@ namespace flash {
 
         void normalize() noexcept;
 
-        void add(Vector3D const &vector) noexcept;
+        void add(Vec4 const &vector) noexcept;
 
-        void subtract(Vector3D const &vector) noexcept;
+        void subtract(Vec4 const &vector) noexcept;
 
-        bool isEqualTo(Vector3D const &vector) const noexcept;
+        bool isEqualTo(Vec4 const &vector) const noexcept;
 
         void multiplyByMatrix(Matrix3D const &matrix) noexcept;
 
-        Vector3D clone() const;
+        Vec4 clone() const;
 
-        float operator*(Vector3D& v) const noexcept;
+        float operator*(Vec4& v) const noexcept;
 
-        Vector3D operator+(Vector3D& v) const noexcept;
+        Vec4 operator+(Vec4& v) const noexcept;
 
-        Vector3D operator-(Vector3D& v) const noexcept;
+        Vec4 operator-(Vec4& v) const noexcept;
 
-        Vector3D operator/(Vector3D& v) const noexcept;
+        Vec4 operator/(Vec4& v) const noexcept;
 
-        Vector3D operator*(float scalar) const noexcept;
+        Vec4 operator*(float scalar) const noexcept;
 
-        Vector3D operator*(Matrix3D& m) const noexcept;
+        Vec4 operator*(Matrix3D& m) const noexcept;
 
-        bool operator==(Vector3D& v) const noexcept;
+        bool operator==(Vec4& v) const noexcept;
 
         float& operator[](int index) { return *(&x + index); }
         const float& operator[](int index) const { return *(&x + index);  }
