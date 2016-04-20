@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../core/Mat4.h"
+#include "Mat4.h"
 #include "Quaternion.h"
 
 namespace flash {

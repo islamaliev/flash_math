@@ -1,5 +1,5 @@
 #include <math.h>
-#include "EulerAngles.h"
+#include "../include/EulerAngles.h"
 
 using namespace flash::math;
 
