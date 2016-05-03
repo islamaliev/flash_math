@@ -1,9 +1,9 @@
 #include <math.h>
-#include "../include/Quaternion.h"
+#include "Quaternion.h"
 
 using namespace flash::math;
 
-Quaternion::Quaternion(float theta, Vec4 const &v) {
+Quaternion::Quaternion(float theta, const Vec4& v) {
 	float halfTheta = theta / 2;
 	_w = cosf(halfTheta);
 	float sinTheta = sinf(halfTheta);
@@ -38,7 +38,7 @@ void Quaternion::invert() {
 	_z *= -1;
 }
 
-Quaternion Quaternion::operator*(const Quaternion &q) const {
+Quaternion Quaternion::operator*(const Quaternion& q) const {
 	float w = _w * q._w - _x * q._x - _y * q._y - _z * q._z;
 	float x = _w * q._x + _x * q._w + _y * q._z - _z * q._y;
 	float y = _w * q._y + _y * q._w + _z * q._x - _x * q._z;
@@ -51,13 +51,13 @@ Quaternion Quaternion::operator*(float scalar) const {
 	return Quaternion(_w * scalar, _x * scalar, _y * scalar, _z * scalar);
 }
 
-Quaternion Quaternion::getDifference(const Quaternion &q1, const Quaternion &q2) {
+Quaternion Quaternion::getDifference(const Quaternion& q1, const Quaternion& q2) {
 	Quaternion inverse = q1;
 	inverse.invert();
 	return q2 * inverse;
 }
 
-float Quaternion::dotProduct(const Quaternion &q1, const Quaternion &q2) {
+float Quaternion::dotProduct(const Quaternion& q1, const Quaternion& q2) {
 	return q1._w * q2._w + q1._x * q2._x + q1._y * q2._y + q1._z * q2._z;
 }
 
@@ -76,7 +76,7 @@ Quaternion Quaternion::exp(float exponent) const {
 	return expQuaternion;
 }
 
-Quaternion Quaternion::slerp(const Quaternion &to, float fraction) const {
+Quaternion Quaternion::slerp(const Quaternion& to, float fraction) const {
 	float w = to._w;
 	float x = to._x;
 	float y = to._y;
@@ -139,7 +139,7 @@ Mat4 Quaternion::toMatrix() const {
 	return Mat4(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 }
 
-Quaternion Quaternion::fromMatrix(const Mat4 &matrix) {
+Quaternion Quaternion::fromMatrix(const Mat4& matrix) {
 	float x1 = matrix.x1();
 	float y1 = matrix.y1();
 	float z1 = matrix.z1();

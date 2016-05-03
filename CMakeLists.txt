@@ -4,6 +4,8 @@ project(flash_math)
 set(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
         CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
+include_directories(${${PROJECT_NAME}_INCLUDE_DIRS})
+
 set(TARGET_NAME fmath)
 
 set(${PROJECT_NAME}_TARGET_NAME ${TARGET_NAME}

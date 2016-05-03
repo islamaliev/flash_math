@@ -1,5 +1,5 @@
 #include <math.h>
-#include "../include/EulerAngles.h"
+#include "EulerAngles.h"
 
 using namespace flash::math;
 
@@ -132,7 +132,7 @@ Mat4 EulerAngles::toObjectMatrix() const {
 	return Mat4(x1, y1, z1, x2, y2, z2, x3, y3, z3);
 }
 
-EulerAngles EulerAngles::fromUprightMatrix(const Mat4 &matrix) {
+EulerAngles EulerAngles::fromUprightMatrix(const Mat4& matrix) {
 	// We will compute the Euler angle values in radians and store them here:
 	float h, p, b;
 
@@ -164,7 +164,7 @@ EulerAngles EulerAngles::fromUprightMatrix(const Mat4 &matrix) {
 	return EulerAngles(h * toGradMult, p * toGradMult, b * toGradMult);
 }
 
-EulerAngles EulerAngles::fromObjectMatrix(const Mat4 &matrix) {
+EulerAngles EulerAngles::fromObjectMatrix(const Mat4& matrix) {
 	// We will compute the Euler angle values in radians and store them here:
 	float h, p, b;
     Mat4 m(matrix);

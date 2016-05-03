@@ -1,6 +1,5 @@
 #include <math.h>
-#include <stdexcept>
-#include "../include/Mat4.h"
+#include "Mat4.h"
 
 using namespace flash::math;
 
@@ -229,9 +228,10 @@ void Mat4::inverse() {
 }
 
 bool Mat4::isEqual(Mat4 const &matrix) const {
-    return matrix.x1() == v1.x && matrix.x2() == v2.x && matrix.x3() == v3.x && matrix.y1() == v1.y &&
-            matrix.y2() == v2.y && matrix.y3() == v3.y && matrix.z1() == v1.z && matrix.z2() == v2.z &&
-            matrix.z3() == v3.z;
+    return matrix.x1() == v1.x && matrix.x2() == v2.x && matrix.x3() == v3.x && matrix.w1() == v1.w
+           && matrix.y1() == v1.y && matrix.y2() == v2.y && matrix.y3() == v3.y && matrix.w2() == v2.w
+           && matrix.z1() == v1.z && matrix.z2() == v2.z && matrix.z3() == v3.z && matrix.w3() == v3.w
+           && matrix.xt() == vt.x && matrix.yt() == vt.y && matrix.zt() == vt.z && matrix.wt() == vt.w;
 }
 
 bool Mat4::isClose(Mat4 const &matrix, unsigned int precision) const {
