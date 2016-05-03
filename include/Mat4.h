@@ -11,6 +11,8 @@ namespace flash {
 	class Mat4 {
 
 	public:
+		static const Mat4 IDENTITY;
+
 		explicit Mat4(float x1, float y1 = 0, float z1 = 0, float x2 = 0,
 				float y2 = 1, float z2 = 0, float x3 = 0, float y3 = 0,
 				float z3 = 1, float xt = 0, float yt = 0, float zt = 0);

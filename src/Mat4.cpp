@@ -5,6 +5,8 @@ using namespace flash::math;
 
 static float ORTHOGONALIZE_FRACTION = 0.25;
 
+const Mat4 Mat4::IDENTITY = Mat4();
+
 Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) ;
 
 Mat4::Mat4(float x1, float y1, float z1, float x2, float y2,
