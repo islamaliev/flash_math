@@ -3,6 +3,12 @@
 
 using namespace flash::math;
 
+namespace {
+    float _squareRootOfSquareSums(float a, float b, float c) {
+        return sqrtf(a * a + b * b + c * c);
+    }
+}
+
 Vec4::Vec4(float x, float y, float z, float w): x(x), y(y), z(z), w(w) {
 };
 
@@ -14,7 +20,7 @@ float Vec4::distanceBetween(const Vec4& vec1, const Vec4& vec2) {
 }
 
 float Vec4::dotProduct(const Vec4& vec1, const Vec4& vec2) {
-    return vec2.x * vec1.x + vec2.y * vec1.y + vec2.z * vec1.z;
+    return vec1 | vec2;
 }
 
 float Vec4::angleBetween(const Vec4& vec1, const Vec4& vec2) {
@@ -24,15 +30,7 @@ float Vec4::angleBetween(const Vec4& vec1, const Vec4& vec2) {
 }
 
 Vec4 Vec4::crossProduct(const Vec4& vec1, const Vec4& vec2) {
-    Vec4 resultVec;
-    resultVec.x = vec1.y * vec2.z - vec1.z * vec2.y;
-    resultVec.y = vec1.z * vec2.x - vec1.x * vec2.z;
-    resultVec.z = vec1.x * vec2.y - vec1.y * vec2.x;
-    return resultVec;
-}
-
-float Vec4::_squareRootOfSquareSums(float a, float b, float c) {
-    return sqrtf(a * a + b * b + c * c);
+    return vec1 ^ vec2;
 }
 
 float Vec4::length() const {
@@ -41,71 +39,87 @@ float Vec4::length() const {
 
 void Vec4::setLength(float value) {
     normalize();
-    multiplyByScalar(value);
+    *this *= value;
 }
 
-void Vec4::add(const Vec4& vec) {
-    x += vec.x;
-    y += vec.y;
-    z += vec.z;
-}
-
-void Vec4::subtract(const Vec4& vec) {
-    x -= vec.x;
-    y -= vec.y;
-    z -= vec.z;
-}
-
-Vec4 Vec4::clone() const {
-    return Vec4(x, y, z, w);
-}
-
-bool Vec4::isEqualTo(const Vec4& vec) const {
+bool Vec4::equals(const Vec4& vec) const {
     return vec.x == x && vec.y == y && vec.z == z && vec.w == w;
 }
 
-void Vec4::multiplyByScalar(float scalar) {
-    x *= scalar;
-    y *= scalar;
-    z *= scalar;
-}
-
 void Vec4::normalize() {
-    multiplyByScalar(1 / length());
+    *this *= 1 / length();
 }
 
-float Vec4::operator*(Vec4 &v) const {
-    return dotProduct(*this, v);
+float Vec4::operator|(const Vec4 &v) const {
+    return x * v.x + y * v.y + z * v.z;
 }
 
-Vec4 Vec4::operator+(Vec4 &v) const {
-    Vec4 resultVec = *this;
-    resultVec.add(v);
+Vec4 Vec4::operator^(const Vec4 &v) const {
+    Vec4 resultVec;
+    resultVec.x = y * v.z - z * v.y;
+    resultVec.y = z * v.x - x * v.z;
+    resultVec.z = x * v.y - y * v.x;
     return resultVec;
 }
 
-Vec4 Vec4::operator/(Vec4 &v) const {
+Vec4 Vec4::operator+(const Vec4 &v) const {
+    Vec4 resultVec = *this;
+    resultVec += v;
+    return resultVec;
+}
+
+Vec4& Vec4::operator+=(const Vec4 &v) {
+    x += v.x;
+    y += v.y;
+    z += v.z;
+    return *this;
+}
+
+Vec4 Vec4::operator/(const Vec4 &v) const {
     return Vec4::crossProduct(*this, v);
 }
 
 Vec4 Vec4::operator*(float scalar) const {
     Vec4 resultVector = *this;
-    resultVector.multiplyByScalar(scalar);
+    resultVector *= scalar;
     return resultVector;
 }
 
-Vec4 Vec4::operator-(Vec4 &v) const {
-    Vec4 resultVector = *this;
-    resultVector.subtract(v);
-    return resultVector;
+Vec4& Vec4::operator*=(float scalar) {
+    x *= scalar;
+    y *= scalar;
+    z *= scalar;
+    return *this;
 }
 
-bool Vec4::operator==(Vec4 &v) const {
-    return isEqualTo(v);
+Vec4 Vec4::operator-(const Vec4 &v) const {
+    Vec4 resultVec = *this;
+    resultVec -= v;
+    return resultVec;
 }
 
-Vec4 Vec4::operator*(Mat4 &m) const {
-    Vec4 resultVector = *this;
-    resultVector *= m;
-    return resultVector;
+Vec4& Vec4::operator-=(const Vec4 &v) {
+    x -= v.x;
+    y -= v.y;
+    z -= v.z;
+    return *this;
+}
+
+bool Vec4::operator==(const Vec4 &v) const {
+    return equals(v);
+}
+
+Vec4 Vec4::operator*(const Mat4& m) const {
+    Vec4 result = *this;
+    result *= m;
+    return result;
+}
+
+Vec4& Vec4::operator*=(const Mat4& m) {
+    float newX = x * m.v1.x + y * m.v2.x + z * m.v3.x + w * m.vt.x;
+    float newY = x * m.v1.y + y * m.v2.y + z * m.v3.y + w * m.vt.y;
+    z = x * m.v1.z + y * m.v2.z + z * m.v3.z + w * m.vt.z;
+    x = newX;
+    y = newY;
+    return *this;
 }

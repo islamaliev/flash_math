@@ -19,9 +19,9 @@ namespace {
         m.v1.z = tempV1.z;
 
         float dp = Vec4::dotProduct(tempV2, tempV1);
-        Vec4 auxVec = tempV2.clone();
-        auxVec.multiplyByScalar(dp);
-        tempV2.subtract(auxVec);
+        Vec4 auxVec = tempV2;
+        auxVec *= dp;
+        tempV2 -= auxVec;
         m.v2.x = tempV2.x;
         m.v2.y = tempV2.y;
         m.v2.z = tempV2.z;
@@ -37,13 +37,13 @@ namespace {
         float dp22 = Vec4::dotProduct(vj, vj);
         float dp13 = Vec4::dotProduct(vi, vk);
         float dp33 = Vec4::dotProduct(vk, vk);
-        Vec4 basis = vi.clone();
-        Vec4 v2Clone = vj.clone();
-        Vec4 v3Clone = vk.clone();
-        v2Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp12 / dp22);
-        v3Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp13 / dp33);
-        basis.subtract(v2Clone);
-        basis.subtract(v2Clone);
+        Vec4 basis = vi;
+        Vec4 v2Clone = vj;
+        Vec4 v3Clone = vk;
+        v2Clone *= ORTHOGONALIZE_FRACTION * dp12 / dp22;
+        v3Clone *= ORTHOGONALIZE_FRACTION * dp13 / dp33;
+        basis -= v2Clone;
+        basis -= v2Clone;
         return basis;
     }
 
@@ -439,19 +439,4 @@ Mat4& Mat4::operator*=(const Mat4& m) {
     v3.w = result[2][3];
     vt.w = result[3][3];
     return *this;
-}
-
-Vec4 Mat4::operator*(const Vec4& v) const {
-    Vec4 result;
-    result *= *this;
-    return result;
-}
-
-Vec4& flash::math::operator*=(Vec4& v, const Mat4& m) {
-    float newX = v.x * m.v1.x + v.y * m.v2.x + v.z * m.v3.x + v.w * m.vt.x;
-    float newY = v.x * m.v1.y + v.y * m.v2.y + v.z * m.v3.y + v.w * m.vt.y;
-    v.z = v.x * m.v1.z + v.y * m.v2.z + v.z * m.v3.z + v.w * m.vt.z;
-    v.x = newX;
-    v.y = newY;
-    return v;
 }

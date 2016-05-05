@@ -4,7 +4,8 @@
 #include "Vec4.h"
 
 namespace flash {
-	namespace math {
+
+namespace math {
 
 	class Vec4;
 
@@ -120,11 +121,8 @@ namespace flash {
 		Mat4 operator*(const Mat4& m) const;
 		Mat4& operator*=(const Mat4& m);
 
-		Mat4 operator*(float scalar) const;
-		Mat4& operator*=(float scalar);
-
-		Vec4 operator*(const Vec4& v) const;
-		friend Vec4& operator*=(Vec4& v, const Mat4& m);
+		Mat4 operator*(float) const;
+		Mat4& operator*=(float);
 
 		Vec4 v1 {1, 0, 0, 0};
 		Vec4 v2 {0, 1, 0, 0};
@@ -136,8 +134,6 @@ namespace flash {
 		const Vec4& operator[](int index) const { return *(&v1 + index); }
 
 	};
-
-	Vec4& operator*=(Vec4& v, const Mat4& m);
 
 }
 }
