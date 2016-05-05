@@ -13,13 +13,12 @@ namespace flash {
 	public:
 		static const Mat4 IDENTITY;
 
-		explicit Mat4(float x1, float y1 = 0, float z1 = 0, float x2 = 0,
-				float y2 = 1, float z2 = 0, float x3 = 0, float y3 = 0,
-				float z3 = 1, float xt = 0, float yt = 0, float zt = 0);
+		explicit Mat4(float x1, float y1 = 0, float z1 = 0
+				, float x2 = 0, float y2 = 1, float z2 = 0
+				, float x3 = 0, float y3 = 0, float z3 = 1
+				, float xt = 0, float yt = 0, float zt = 0);
 
 		Mat4() = default;
-
-		static void multiplyVectorByMatrix(Vec4& vector, const Mat4& matrix);
 
 		static Mat4 perspectiveProjection(float fovy, float aspectRatio, float near, float far);
 
@@ -115,6 +114,18 @@ namespace flash {
 		inline operator float*() { return &v1.x; }
 		inline operator const float*() const { return &v1.x; }
 
+		Mat4 operator+(const Mat4& m) const;
+		Mat4& operator+=(const Mat4& m);
+
+		Mat4 operator*(const Mat4& m) const;
+		Mat4& operator*=(const Mat4& m);
+
+		Mat4 operator*(float scalar) const;
+		Mat4& operator*=(float scalar);
+
+		Vec4 operator*(const Vec4& v) const;
+		friend Vec4& operator*=(Vec4& v, const Mat4& m);
+
 		Vec4 v1 {1, 0, 0, 0};
 		Vec4 v2 {0, 1, 0, 0};
 		Vec4 v3 {0, 0, 1, 0};
@@ -124,12 +135,10 @@ namespace flash {
 		Vec4& operator[](int index) { return *(&v1 + index); }
 		const Vec4& operator[](int index) const { return *(&v1 + index); }
 
-		bool _areClose(float value1, float value2, int factor) const;
-
-		void _performGrandSchmidtOrthogonalizingAlgorithm();
-
-		void _performOrthogonalizingAlgorithm();
 	};
 
-	}
+	Vec4& operator*=(Vec4& v, const Mat4& m);
+
 }
+}
+

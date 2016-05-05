@@ -30,8 +30,6 @@ namespace flash {
 
         bool isEqualTo(Vec4 const &vector) const;
 
-        void multiplyByMatrix(Mat4 const &matrix);
-
         Vec4 clone() const;
 
         float operator*(Vec4& v) const;

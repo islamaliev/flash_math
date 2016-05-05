@@ -56,10 +56,6 @@ void Vec4::subtract(const Vec4& vec) {
     z -= vec.z;
 }
 
-void Vec4::multiplyByMatrix(const Mat4& matrix) {
-	Mat4::multiplyVectorByMatrix(*this, matrix);
-}
-
 Vec4 Vec4::clone() const {
     return Vec4(x, y, z, w);
 }
@@ -110,6 +106,6 @@ bool Vec4::operator==(Vec4 &v) const {
 
 Vec4 Vec4::operator*(Mat4 &m) const {
     Vec4 resultVector = *this;
-    resultVector.multiplyByMatrix(m);
+    resultVector *= m;
     return resultVector;
 }

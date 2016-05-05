@@ -7,7 +7,90 @@ static float ORTHOGONALIZE_FRACTION = 0.25;
 
 const Mat4 Mat4::IDENTITY = Mat4();
 
-Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) ;
+namespace {
+
+    void _performGrandSchmidtOrthogonalizingAlgorithm(Mat4& m) {
+        Vec4 tempV1 = Vec4(m.v1.x, m.v1.y, m.v1.z);
+        Vec4 tempV2 = Vec4(m.v2.x, m.v2.y, m.v2.z);
+        tempV1.normalize();
+        tempV2.normalize();
+        m.v1.x = tempV1.x;
+        m.v1.y = tempV1.y;
+        m.v1.z = tempV1.z;
+
+        float dp = Vec4::dotProduct(tempV2, tempV1);
+        Vec4 auxVec = tempV2.clone();
+        auxVec.multiplyByScalar(dp);
+        tempV2.subtract(auxVec);
+        m.v2.x = tempV2.x;
+        m.v2.y = tempV2.y;
+        m.v2.z = tempV2.z;
+
+        Vec4 tempV3 = Vec4::crossProduct(tempV1, tempV2);
+        m.v3.x = tempV3.x;
+        m.v3.y = tempV3.y;
+        m.v3.z = tempV3.z;
+    }
+
+    Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) {
+        float dp12 = Vec4::dotProduct(vi, vj);
+        float dp22 = Vec4::dotProduct(vj, vj);
+        float dp13 = Vec4::dotProduct(vi, vk);
+        float dp33 = Vec4::dotProduct(vk, vk);
+        Vec4 basis = vi.clone();
+        Vec4 v2Clone = vj.clone();
+        Vec4 v3Clone = vk.clone();
+        v2Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp12 / dp22);
+        v3Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp13 / dp33);
+        basis.subtract(v2Clone);
+        basis.subtract(v2Clone);
+        return basis;
+    }
+
+    void _performOrthogonalizingAlgorithm(Mat4& m) {
+        Vec4 tempV1 = Vec4(m.v1.x, m.v1.y, m.v1.z);
+        Vec4 tempV2 = Vec4(m.v2.x, m.v2.y, m.v2.z);
+        Vec4 tempV3 = Vec4(m.v3.x, m.v3.y, m.v3.z);
+        Vec4 basis1 = _deriveBasisVector(tempV1, tempV2, tempV3);
+        Vec4 basis2 = _deriveBasisVector(tempV2, tempV1, tempV3);
+        Vec4 basis3 = _deriveBasisVector(tempV3, tempV1, tempV2);
+        m.v1.x = basis1.x;
+        m.v1.y = basis1.y;
+        m.v1.z = basis1.z;
+        m.v2.x = basis2.x;
+        m.v2.y = basis2.y;
+        m.v2.z = basis2.z;
+        m.v3.x = basis3.x;
+        m.v3.y = basis3.y;
+        m.v3.z = basis3.z;
+    }
+
+    bool _areClose(float value1, float value2, int factor) {
+        const float d1 = roundf(value1 * factor);
+        const float d2 = roundf(value2 * factor);
+        return d1 == d2;
+    }
+
+}
+
+Mat4 Mat4::operator*(float scalar) const {
+    Mat4 result(*this);
+    result *= scalar;
+    return result;
+}
+
+Mat4& Mat4::operator*=(float scalar) {
+    v1.x *= scalar;
+    v1.y *= scalar;
+    v1.z *= scalar;
+    v2.x *= scalar;
+    v2.y *= scalar;
+    v2.z *= scalar;
+    v3.x *= scalar;
+    v3.y *= scalar;
+    v3.z *= scalar;
+    return *this;
+}
 
 Mat4::Mat4(float x1, float y1, float z1, float x2, float y2,
 		float z2, float x3, float y3, float z3, float xt, float yt,
@@ -251,7 +334,7 @@ void Mat4::translate(float xt, float yt, float zt) {
 }
 
 void Mat4::transform(Vec4 &vector) const {
-	multiplyVectorByMatrix(vector, *this);
+    vector *= *this;
 }
 
 Mat4 Mat4::clone() const {
@@ -288,81 +371,87 @@ void Mat4::orthogonalize() {
 	v3.y = basis.y;
 	v3.z = basis.z;
 	for (int i = 0; i < 5; i++) {
-		_performOrthogonalizingAlgorithm();
+		_performOrthogonalizingAlgorithm(*this);
 	}
-	_performGrandSchmidtOrthogonalizingAlgorithm();
+	_performGrandSchmidtOrthogonalizingAlgorithm(*this);
 }
 
-void Mat4::_performGrandSchmidtOrthogonalizingAlgorithm() {
-	Vec4 tempV1 = Vec4(v1.x, v1.y, v1.z);
-	Vec4 tempV2 = Vec4(v2.x, v2.y, v2.z);
-	tempV1.normalize();
-	tempV2.normalize();
-	v1.x = tempV1.x;
-	v1.y = tempV1.y;
-	v1.z = tempV1.z;
-
-	float dp = Vec4::dotProduct(tempV2, tempV1);
-	Vec4 auxVec = tempV2.clone();
-	auxVec.multiplyByScalar(dp);
-	tempV2.subtract(auxVec);
-	v2.x = tempV2.x;
-	v2.y = tempV2.y;
-	v2.z = tempV2.z;
-
-	Vec4 tempV3 = Vec4::crossProduct(tempV1, tempV2);
-	v3.x = tempV3.x;
-	v3.y = tempV3.y;
-	v3.z = tempV3.z;
+Mat4 Mat4::operator+(const Mat4& m) const {
+    Mat4 result(*this);
+    result += m;
+    return result;
 }
 
-void Mat4::_performOrthogonalizingAlgorithm() {
-	Vec4 tempV1 = Vec4(v1.x, v1.y, v1.z);
-	Vec4 tempV2 = Vec4(v2.x, v2.y, v2.z);
-	Vec4 tempV3 = Vec4(v3.x, v3.y, v3.z);
-	Vec4 basis1 = _deriveBasisVector(tempV1, tempV2, tempV3);
-	Vec4 basis2 = _deriveBasisVector(tempV2, tempV1, tempV3);
-	Vec4 basis3 = _deriveBasisVector(tempV3, tempV1, tempV2);
-	v1.x = basis1.x;
-	v1.y = basis1.y;
-	v1.z = basis1.z;
-	v2.x = basis2.x;
-	v2.y = basis2.y;
-	v2.z = basis2.z;
-	v3.x = basis3.x;
-	v3.y = basis3.y;
-	v3.z = basis3.z;
+Mat4& Mat4::operator+=(const Mat4& m) {
+    v1.x = v1.x + m.v1.x;
+    v1.y = v1.y + m.v1.y;
+    v1.z = v1.z + m.v1.z;
+    v1.w = v1.w + m.v1.w;
+    v2.x = v2.x + m.v2.x;
+    v2.y = v2.y + m.v2.y;
+    v2.z = v2.z + m.v2.z;
+    v2.w = v2.w + m.v2.w;
+    v3.x = v3.x + m.v3.x;
+    v3.y = v3.y + m.v3.y;
+    v3.z = v3.z + m.v3.z;
+    v3.w = v3.w + m.v3.w;
+    vt.x = vt.x + m.vt.x;
+    vt.y = vt.y + m.vt.y;
+    vt.z = vt.z + m.vt.z;
+    vt.w = vt.w + m.vt.w;
+    return *this;
 }
 
-Vec4 _deriveBasisVector(Vec4 const &vi, Vec4 const &vj, Vec4 const &vk) {
-	float dp12 = Vec4::dotProduct(vi, vj);
-	float dp22 = Vec4::dotProduct(vj, vj);
-	float dp13 = Vec4::dotProduct(vi, vk);
-	float dp33 = Vec4::dotProduct(vk, vk);
-	Vec4 basis = vi.clone();
-	Vec4 v2Clone = vj.clone();
-	Vec4 v3Clone = vk.clone();
-	v2Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp12 / dp22);
-	v3Clone.multiplyByScalar(ORTHOGONALIZE_FRACTION * dp13 / dp33);
-	basis.subtract(v2Clone);
-	basis.subtract(v2Clone);
-	return basis;
+Mat4 Mat4::operator*(const Mat4& m) const {
+    Mat4 result(*this);
+    result *= m;
+    return result;
 }
 
-bool Mat4::_areClose(float value1, float value2, int factor) const {
-    const float d1 = roundf(value1 * factor);
-    const float d2 = roundf(value2 * factor);
-    return d1 == d2;
+Mat4& Mat4::operator*=(const Mat4& m) {
+    Mat4 result;
+    for (int j = 0; j < 4; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            float sum = 0;
+
+            for (int n = 0; n < 4; ++n) {
+                sum += operator[](n)[i] * m[j][n];
+            }
+
+            result[j][i] = sum;
+        }
+    }
+
+    v1.x = result[0][0];
+    v2.x = result[1][0];
+    v3.x = result[2][0];
+    vt.x = result[3][0];
+    v1.y = result[0][1];
+    v2.y = result[1][1];
+    v3.y = result[2][1];
+    vt.y = result[3][1];
+    v1.z = result[0][2];
+    v2.z = result[1][2];
+    v3.z = result[2][2];
+    vt.z = result[3][2];
+    v1.w = result[0][3];
+    v2.w = result[1][3];
+    v3.w = result[2][3];
+    vt.w = result[3][3];
+    return *this;
 }
 
-void Mat4::multiplyVectorByMatrix(Vec4 &vector, const Mat4 &matrix) {
-	float x = vector.x;
-	float y = vector.y;
-	float z = vector.z;
-	float newX = x * matrix.x1() + y * matrix.x2() + z * matrix.x3() + vector.w * matrix.xt();
-	float newY = x * matrix.y1() + y * matrix.y2() + z * matrix.y3() + vector.w * matrix.yt();
-    float zt = matrix.zt();
-    vector.z = x * matrix.z1() + y * matrix.z2() + z * matrix.z3() + vector.w * zt;
-	vector.x = newX;
-	vector.y = newY;
+Vec4 Mat4::operator*(const Vec4& v) const {
+    Vec4 result;
+    result *= *this;
+    return result;
+}
+
+Vec4& flash::math::operator*=(Vec4& v, const Mat4& m) {
+    float newX = v.x * m.v1.x + v.y * m.v2.x + v.z * m.v3.x + v.w * m.vt.x;
+    float newY = v.x * m.v1.y + v.y * m.v2.y + v.z * m.v3.y + v.w * m.vt.y;
+    v.z = v.x * m.v1.z + v.y * m.v2.z + v.z * m.v3.z + v.w * m.vt.z;
+    v.x = newX;
+    v.y = newY;
+    return v;
 }
