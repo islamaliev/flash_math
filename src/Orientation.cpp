@@ -1,4 +1,5 @@
-#include <math.h>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "Orientation.h"
 
 using namespace flash::math;
@@ -15,7 +16,7 @@ float Orientation::_wrapPi(float theta) {
 	if (fabsf(theta) > pi) {
 		// out of range. Determine how many "revolutions" we need to add
 		double revolutions = floor((theta + pi) / pi2);
-		theta -= revolutions * pi2;
+		theta -= static_cast<float>(revolutions * pi2);
 	}
 	return theta;
 }

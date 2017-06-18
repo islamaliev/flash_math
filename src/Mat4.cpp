@@ -1,4 +1,5 @@
-#include <math.h>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "Mat4.h"
 
 using namespace flash::math;
@@ -320,7 +321,7 @@ bool Mat4::isEqual(Mat4 const &matrix) const {
 }
 
 bool Mat4::isClose(Mat4 const &matrix, unsigned int precision) const {
-    int factor = (int) powf(10, precision);
+    int factor = (int) powf(10, static_cast<float>(precision));
     return _areClose(matrix.x1(), v1.x, factor) && _areClose(matrix.y1(), v1.y, factor) && _areClose(matrix.z1(), v1.z,
     factor) && _areClose(matrix.x2(), v2.x, factor) && _areClose(matrix.y2(), v2.y,
     factor) && _areClose(matrix.z2(), v2.z, factor) && _areClose(matrix.x3(), v3.x,
