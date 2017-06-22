@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(flash_math)
 
-set(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
+set(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
         CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
 
 set(INCLUDE_DIRS ${${PROJECT_NAME}_INCLUDE_DIRS})
