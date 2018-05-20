@@ -1,24 +1,36 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(flash_math)
 
-set(${PROJECT_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
-        CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE)
+set(SOURCE_DIR src)
+include_directories(${SOURCE_DIR})
 
-set(INCLUDE_DIRS ${${PROJECT_NAME}_INCLUDE_DIRS})
-
-include_directories(${INCLUDE_DIRS})
+message(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/EulerAngles.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Mat4.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Orientation.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Quaternion.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/Vec4.cpp"
-    "${INCLUDE_DIRS}/EulerAngles.h"
-    "${INCLUDE_DIRS}/Mat4.h"
-    "${INCLUDE_DIRS}/Orientation.h"
-    "${INCLUDE_DIRS}/Quaternion.h"
-    "${INCLUDE_DIRS}/Vec4.h")
+    "${SOURCE_DIR}/EulerAngles.cpp"
+    "${SOURCE_DIR}/EulerAngles.h"
+    "${SOURCE_DIR}/Mat4.cpp"
+    "${SOURCE_DIR}/Mat4.h"
+    "${SOURCE_DIR}/Orientation.cpp"
+    "${SOURCE_DIR}/Orientation.h"
+    "${SOURCE_DIR}/Quaternion.cpp"
+    "${SOURCE_DIR}/Quaternion.h"
+    "${SOURCE_DIR}/Vec4.cpp"
+    "${SOURCE_DIR}/Vec4.h")
+
+set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+
+add_executable(flash_math_run test_run.cpp)
+target_link_libraries(flash_math_run ${PROJECT_NAME})
+
+function(install_package)
+	set(PACKAGE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/package)
+	install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${PACKAGE_DIR}/lib ARCHIVE DESTINATION ${PACKAGE_DIR}/lib CONFIGURATIONS)
+	install(DIRECTORY ${SOURCE_DIR}/ DESTINATION ${PACKAGE_DIR}/include FILES_MATCHING PATTERN "*.h")
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -D BUILD_TYPE=$<CONFIG> -P cmake_install.cmake)
+endfunction()
+
+install_package()
