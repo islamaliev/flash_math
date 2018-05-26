@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 2.8.4)
 project(flash_math)
 
 set(SOURCE_DIR src)
-include_directories(${SOURCE_DIR})
-
-message(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
     "${SOURCE_DIR}/EulerAngles.cpp"
@@ -22,9 +19,7 @@ set(CMAKE_DEBUG_POSTFIX d)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-
-add_executable(flash_math_run test_run.cpp)
-target_link_libraries(flash_math_run ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME} PUBLIC ${SOURCE_DIR})
 
 function(install_package)
 	set(PACKAGE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/package)
@@ -33,4 +28,6 @@ function(install_package)
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} ARGS -D BUILD_TYPE=$<CONFIG> -P cmake_install.cmake)
 endfunction()
 
-install_package()
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    install_package()
+endif()
